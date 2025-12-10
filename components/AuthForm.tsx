@@ -14,6 +14,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import FormField from '@/components/FormField';
+import { useRouter } from 'next/navigation';
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -24,6 +25,7 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
+  const router = useRouter();
   const isSignIn = type === 'sign-in';
 
   const formSchema = authFormSchema(type);
@@ -40,9 +42,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === 'sign-up') {
-        console.log('SIGN UP', values);
+        toast.success('Account created successfully, please sign in')
+        router.push('/sign-in')
       } else {
-        console.log('SIGN IN', values);
+        toast.success('Signed in successfully')
+        router.push('/')
       }
     } catch (error) {
       console.log(error);
@@ -68,12 +72,26 @@ const AuthForm = ({ type }: { type: FormType }) => {
               <FormField
                 control={form.control}
                 name="name"
-                label="name"
+                label="Name"
                 placeholder="Your Name"
               />
             )}
-            <p>Email</p>
-            <p>Password</p>
+
+            <FormField
+              control={form.control}
+              name="email"
+              label="Email"
+              placeholder="e.g. johndoe@gmail.com"
+              type="email"
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              label="Password"
+              placeholder="Your password"
+              type="password"
+            />
 
             <Button type="submit" className="btn">
               {isSignIn ? 'Sign in' : 'Create an account'}

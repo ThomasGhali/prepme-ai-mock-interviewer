@@ -26,14 +26,13 @@ const FormField = ({
   return (
     <Controller
       control={control}
-      name="username"
+      name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className='label'>Username</FormLabel>
+          <FormLabel className="label">{label}</FormLabel>
           <FormControl>
-            <Input placeholder="shadcn" {...field} />
+            <Input placeholder={placeholder} type={type} {...field} className='placeholder:text-gray-400! placeholder:opacity-50 input' />
           </FormControl>
-          <FormDescription>This is your public display name.</FormDescription>
           <FormMessage />
         </FormItem>
       )}
