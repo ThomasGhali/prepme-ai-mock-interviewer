@@ -82,3 +82,31 @@ export const signIn = async (params: SignInParams) => {
     };
   }
 };
+
+export const getCurrentUser = async (): Promise<User | null> => {
+  const cookieStore = await cookies();
+
+  const sessionCookie = cookieStore.get('session')?.value;
+
+  if (!sessionCookie) return null;
+
+  try {
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
+
+    const userRecord = await db
+      .collection('users')
+      .doc(decodedClaims.uid)
+      .get();
+
+    if (!userRecord) return null;
+
+    return {
+      ...userRecord.data(),
+      id: userRecord.id,
+    } as User;
+  } catch (error) {
+    console.error(error);
+
+    return null;
+  }
+};
