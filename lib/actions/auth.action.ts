@@ -93,6 +93,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
   try {
     const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
 
+    console.log('decodedClaims: ', decodedClaims);
+
     const userRecord = await db
       .collection('users')
       .doc(decodedClaims.uid)
