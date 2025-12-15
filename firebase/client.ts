@@ -3,7 +3,7 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_CLIENT_API_KEY,
+  apiKey: 'AIzaSyANnFtDMp-dfnBcmB6VDL0i5YrZkKqM_Fs',
   authDomain: 'prepme-e5e39.firebaseapp.com',
   projectId: 'prepme-e5e39',
   storageBucket: 'prepme-e5e39.firebasestorage.app',
