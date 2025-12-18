@@ -26,6 +26,8 @@ export const POST = async (request: Request) => {
       `,
     });
 
+    console.log('sent body:', `type: ${type}`, `role: ${role}`, `level: ${level}`, `techstack: ${techstack}`, `amount: ${amount}`, `userid: ${userid}`);
+
     const interview = {
       role,
       type,
