@@ -9,7 +9,11 @@ export const GET = async () => {
 
 export const POST = async (request: Request) => {
   const parsedRequest = await request.json();
-  const { type, role, level, techstack, amount, userid } = parsedRequest;
+  const requestArgs = parsedRequest.message.toolCalls[0].function.arguments;
+  const { type, role, level, techstack, amount } = requestArgs;
+
+  const userid =
+    requestArgs.userid ?? parsedRequest.message.call?.assistantOverrides?.variableValues?.userid;
 
   try {
     const { text: questions } = await generateText({
@@ -28,13 +32,7 @@ export const POST = async (request: Request) => {
     });
 
     console.log(
-      'sent body:',
-      `type: ${type}`,
-      `request: ${JSON.stringify(parsedRequest, null, 2)}`,
-      `role: ${role}`,
-      `level: ${level}`,
-      `techstack: ${techstack}`,
-      `amount: ${amount}`,
+      `request: ${JSON.stringify(requestArgs, null, 2)}`,
       `userid: ${userid}`,
     );
 
