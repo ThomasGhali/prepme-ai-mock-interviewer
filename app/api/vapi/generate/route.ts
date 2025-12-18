@@ -8,7 +8,8 @@ export const GET = async () => {
 };
 
 export const POST = async (request: Request) => {
-  const { type, role, level, techstack, amount, userid } = await request.json();
+  const parsedRequest = await request.json();
+  const { type, role, level, techstack, amount, userid } = parsedRequest;
 
   try {
     const { text: questions } = await generateText({
@@ -29,7 +30,7 @@ export const POST = async (request: Request) => {
     console.log(
       'sent body:',
       `type: ${type}`,
-      `request: ${request}`,
+      `request: ${parsedRequest}`,
       `role: ${role}`,
       `level: ${level}`,
       `techstack: ${techstack}`,
