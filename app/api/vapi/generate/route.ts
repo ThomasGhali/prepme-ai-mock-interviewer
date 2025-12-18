@@ -30,7 +30,7 @@ export const POST = async (request: Request) => {
     console.log(
       'sent body:',
       `type: ${type}`,
-      `request: ${parsedRequest}`,
+      `request: ${JSON.stringify(parsedRequest, null, 2)}`,
       `role: ${role}`,
       `level: ${level}`,
       `techstack: ${techstack}`,
