@@ -79,17 +79,15 @@ const Agent = ({ userName, userId, type }: AgentProps) => {
 
     setCallStatus(CallStatusVars.CONNECTING);
 
-    await vapi.start(
-      undefined,
-      {
+    await vapi.start({
+      workflowId: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
+      assistantOverrides: {
         variableValues: {
           username: userName,
           userid: userId,
         },
       },
-      undefined,
-      process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
-    );
+    } as any);
 
     setCallStatus(CallStatusVars.ACTIVE);
   };
