@@ -52,7 +52,7 @@ interface AgentProps {
   userId?: string;
   interviewId?: string;
   feedbackId?: string;
-  type: "generate" | "interview";
+  type: 'generate' | 'interview';
   questions?: string[];
 }
 
@@ -83,7 +83,7 @@ interface SignUpParams {
   password: string;
 }
 
-type FormType = "sign-in" | "sign-up";
+type FormType = 'sign-in' | 'sign-up';
 
 interface InterviewFormProps {
   interviewId: string;
@@ -96,4 +96,9 @@ interface InterviewFormProps {
 
 interface TechIconProps {
   techStack: string[];
+}
+
+interface SavedMessages {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
 }

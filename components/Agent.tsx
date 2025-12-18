@@ -1,21 +1,63 @@
+'use client';
+
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { vapi } from '@/lib/vapi.sdk';
 
-enum CallStatus {
-  INACTIVE = 'INACTIVE',
-  CONNECTING = 'CONNECTING',
-  ACTIVE = 'ACTIVE',
-  FINISHED = 'FINISHED',
-}
+const CallStatusVars = {
+  INACTIVE: 'INACTIVE',
+  CONNECTING: 'CONNECTING',
+  ACTIVE: 'ACTIVE',
+  FINISHED: 'FINISHED',
+} as const;
 
-const Agent = ({ userName }: AgentProps) => {
-  const callStatus = CallStatus.FINISHED;
-  const isSpeaking = true;
-  const messages = [
-    'Whats your name?',
-    'My name is John Doe, nice to meet you!',
-  ];
-  const lastMessage = messages[messages.length - 1];
+type CallStatus = (typeof CallStatusVars)[keyof typeof CallStatusVars];
+
+const Agent = ({ userName, userId, type }: AgentProps) => {
+  const router = useRouter();
+
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [callStatus, setCallStatus] = useState<CallStatus>(
+    CallStatusVars.INACTIVE,
+  );
+  const [messages, setMessages] = useState<SavedMessages[]>([]);
+
+  // initialize vapi event listeners, e.i. call-start, speech-end, etc.
+  useEffect(() => {
+    const onCallStart = () => setCallStatus(CallStatusVars.ACTIVE);
+    const onCallEnd = () => setCallStatus(CallStatusVars.FINISHED);
+
+    const onMessage = (message: Message) => {
+      if (message.type === 'transcript' && message.transcriptType === 'final') {
+        const newMessage = { role: message.role, content: message.transcript };
+
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    };
+
+    const onSpeechStart = () => setIsSpeaking(true);
+    const onSpeechEnd = () => setIsSpeaking(false);
+
+    const onError = (error: Error) => console.log('Error', error);
+
+    vapi.on('call-start', onCallStart);
+    vapi.on('call-end', onCallEnd);
+    vapi.on('message', onMessage);
+    vapi.on('speech-start', onSpeechStart);
+    vapi.on('speech-end', onSpeechEnd);
+    vapi.on('error', onError);
+
+    return () => {
+      vapi.off('call-start', onCallStart);
+      vapi.off('call-end', onCallEnd);
+      vapi.off('message', onMessage);
+      vapi.off('speech-start', onSpeechStart);
+      vapi.off('speech-end', onSpeechEnd);
+      vapi.off('error', onError);
+    };
+  }, []);
 
   return (
     <>
