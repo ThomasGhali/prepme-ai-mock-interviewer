@@ -12,8 +12,7 @@ export const POST = async (request: Request) => {
   const requestArgs = parsedRequest.message.toolCalls[0].function.arguments;
   const { type, role, level, techstack, amount } = requestArgs;
 
-  const userid =
-    requestArgs.userid ?? parsedRequest.message.call?.assistantOverrides?.variableValues?.userid;
+  const userid = parsedRequest.message.call?.assistantOverrides?.variableValues?.userid;
 
   try {
     const { text: questions } = await generateText({
